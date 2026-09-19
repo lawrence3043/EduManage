@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>EduManage - Courses</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        /* ==========================================
+           SIDEBAR
+           ========================================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #1e293b;
+            color: white;
+
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+
+            margin-bottom: 40px;
+
+            text-align: center;
+        }
+
+        .nav-link {
+            display: block;
+
+            padding: 14px 15px;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* ==========================================
+           MAIN CONTENT
+           ========================================== */
+
+        .main {
+            margin-left: 240px;
+
+            padding: 30px;
+        }
+
+
+        /* ==========================================
+           TOP BAR
+           ========================================== */
+
+        .topbar {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+        .admin {
+            background: white;
+
+            padding: 10px 15px;
+
+            border-radius: 6px;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+
+        /* ==========================================
+           PAGE HEADER
+           ========================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            font-size: 24px;
+        }
+
+        .add-button {
+            background: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .add-button:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* ==========================================
+           FORM SECTION
+           ========================================== */
+
+        .form-section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 8px;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .form-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .course-form {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .course-form input,
+        .course-form select {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+            background: white;
+
+            font-size: 14px;
+        }
+
+        .course-form button {
+            padding: 11px 18px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+        .save-button {
+            background: #16a34a;
+            color: white;
+        }
+
+        .save-button:hover {
+            background: #15803d;
+        }
+
+        .cancel-button {
+            background: #64748b;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background: #475569;
+        }
+
+
+        /* ==========================================
+           TABLE
+           ========================================== */
+
+        .table-container {
+            background: white;
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+
+            padding: 14px;
+
+            text-align: left;
+
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+
+        /* ==========================================
+           ACTION BUTTONS
+           ========================================== */
+
+        .edit-button {
+
+            background: #f59e0b;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 12px;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+            margin-right: 5px;
+        }
+
+        .edit-button:hover {
+            background: #d97706;
+        }
+
+        .delete-button {
+
+            background: #dc2626;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 12px;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+
+            .course-form {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            EduManage
+        </div>
+
+        <a href="dashboard.html"
+           class="nav-link">
+            🏠 Dashboard
+        </a>
+
+        <a href="index.html"
+           class="nav-link">
+            👨‍🎓 Students
+        </a>
+
+        <a href="courses.html"
+           class="nav-link active">
+            📚 Courses
+        </a>
+
+        <a href="#"
+           class="nav-link">
+            📝 Grades
+        </a>
+
+        <a href="#"
+           class="nav-link">
+            👥 Users
+        </a>
+
+        <a href="#"
+           class="nav-link">
+            ⚙️ Settings
+        </a>
+
+        <a href="#"
+           class="nav-link">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <div class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <h1>Courses</h1>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <h2>Course Management</h2>
+
+            <button
+                class="add-button"
+                onclick="showAddForm()">
+
+                + Add New Course
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             ADD COURSE FORM
+             ========================================== -->
+
+        <div
+            class="form-section"
+            id="addCourseSection"
+            style="display: none;">
+
+            <h3>
+                Add New Course
+            </h3>
+
+            <form
+                class="course-form"
+                id="courseForm">
+
+
+                <!-- DEPARTMENT -->
+
+                <select
+                    id="department_id"
+                    required>
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                </select>
+
+
+                <!-- TEACHER -->
+
+                <select
+                    id="teacher_id"
+                    required>
+
+                    <option value="">
+                        Select Teacher
+                    </option>
+
+                </select>
+
+
+                <!-- COURSE NAME -->
+
+                <input
+                    type="text"
+                    id="course_name"
+                    placeholder="Course Name"
+                    required>
+
+
+                <!-- CREDITS -->
+
+                <input
+                    type="number"
+                    id="credits"
+                    placeholder="Credits"
+                    min="1"
+                    required>
+
+
+                <!-- SAVE -->
+
+                <button
+                    type="submit"
+                    class="save-button">
+
+                    Add Course
+
+                </button>
+
+
+                <!-- CANCEL -->
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="hideAddForm()">
+
+                    Cancel
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             EDIT COURSE FORM
+             ========================================== -->
+
+        <div
+            class="form-section"
+            id="editCourseSection"
+            style="display: none;">
+
+            <h3>
+                Edit Course
+            </h3>
+
+            <form
+                class="course-form"
+                id="editCourseForm">
+
+
+                <!-- COURSE ID -->
+
+                <input
+                    type="hidden"
+                    id="edit_course_id">
+
+
+                <!-- DEPARTMENT -->
+
+                <select
+                    id="edit_department_id"
+                    required>
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                </select>
+
+
+                <!-- TEACHER -->
+
+                <select
+                    id="edit_teacher_id"
+                    required>
+
+                    <option value="">
+                        Select Teacher
+                    </option>
+
+                </select>
+
+
+                <!-- COURSE NAME -->
+
+                <input
+                    type="text"
+                    id="edit_course_name"
+                    placeholder="Course Name"
+                    required>
+
+
+                <!-- CREDITS -->
+
+                <input
+                    type="number"
+                    id="edit_credits"
+                    placeholder="Credits"
+                    min="1"
+                    required>
+
+
+                <!-- UPDATE -->
+
+                <button
+                    type="submit"
+                    class="save-button">
+
+                    Update Course
+
+                </button>
+
+
+                <!-- CANCEL -->
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="cancelEdit()">
+
+                    Cancel
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             COURSES TABLE
+             ========================================== -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Course Name
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Teacher
+                        </th>
+
+                        <th>
+                            Credits
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="courseTable">
+
+                    <!-- Courses will appear here -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script>
+
+
+        // ==========================================
+        // LOAD COURSES
+        // ==========================================
+
+        function loadCourses() {
+
+            fetch(
+                "http://127.0.0.1:5000/courses"
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(courses => {
+
+                const table =
+                    document.getElementById(
+                        "courseTable"
+                    );
+
+                table.innerHTML = "";
+
+
+                courses.forEach(course => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${course.course_id}
+                        </td>
+
+                        <td>
+                            ${course.course_name}
+                        </td>
+
+                        <td>
+                            ${course.department_name}
+                        </td>
+
+                        <td>
+                            ${course.teacher_first_name}
+                            ${course.teacher_last_name}
+                        </td>
+
+                        <td>
+                            ${course.credits}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="edit-button"
+                                onclick='editCourse(${JSON.stringify(course)})'>
+
+                                Edit
+
+                            </button>
+
+
+                            <button
+                                class="delete-button"
+                                onclick="deleteCourse(${course.course_id})">
+
+                                Delete
+
+                            </button>
+
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading courses:",
+                    error
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // LOAD DEPARTMENTS
+        // ==========================================
+
+        function loadDepartments() {
+
+            fetch(
+                "http://127.0.0.1:5000/departments"
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(departments => {
+
+                const departmentSelect =
+                    document.getElementById(
+                        "department_id"
+                    );
+
+                const editDepartmentSelect =
+                    document.getElementById(
+                        "edit_department_id"
+                    );
+
+
+                departments.forEach(department => {
+
+
+                    // ADD FORM
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        department.department_id;
+
+                    option.textContent =
+                        department.department_name;
+
+                    departmentSelect.appendChild(
+                        option
+                    );
+
+
+                    // EDIT FORM
+
+                    const editOption =
+                        document.createElement(
+                            "option"
+                        );
+
+                    editOption.value =
+                        department.department_id;
+
+                    editOption.textContent =
+                        department.department_name;
+
+                    editDepartmentSelect.appendChild(
+                        editOption
+                    );
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading departments:",
+                    error
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // LOAD TEACHERS
+        // ==========================================
+
+        function loadTeachers() {
+
+            fetch(
+                "http://127.0.0.1:5000/teachers"
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(teachers => {
+
+                const teacherSelect =
+                    document.getElementById(
+                        "teacher_id"
+                    );
+
+                const editTeacherSelect =
+                    document.getElementById(
+                        "edit_teacher_id"
+                    );
+
+
+                teachers.forEach(teacher => {
+
+
+                    // ADD FORM
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        teacher.teacher_id;
+
+                    option.textContent =
+                        teacher.first_name +
+                        " " +
+                        teacher.last_name;
+
+                    teacherSelect.appendChild(
+                        option
+                    );
+
+
+                    // EDIT FORM
+
+                    const editOption =
+                        document.createElement(
+                            "option"
+                        );
+
+                    editOption.value =
+                        teacher.teacher_id;
+
+                    editOption.textContent =
+                        teacher.first_name +
+                        " " +
+                        teacher.last_name;
+
+                    editTeacherSelect.appendChild(
+                        editOption
+                    );
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading teachers:",
+                    error
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // SHOW ADD COURSE FORM
+        // ==========================================
+
+        function showAddForm() {
+
+            document.getElementById(
+                "addCourseSection"
+            ).style.display = "block";
+
+
+            document.getElementById(
+                "editCourseSection"
+            ).style.display = "none";
+
+        }
+
+
+
+        // ==========================================
+        // HIDE ADD COURSE FORM
+        // ==========================================
+
+        function hideAddForm() {
+
+            document.getElementById(
+                "addCourseSection"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "courseForm"
+            ).reset();
+
+        }
+
+
+
+        // ==========================================
+        // ADD COURSE
+        // ==========================================
+
+        document.getElementById(
+            "courseForm"
+        ).addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const courseData = {
+
+                    department_id:
+                        parseInt(
+                            document.getElementById(
+                                "department_id"
+                            ).value
+                        ),
+
+                    teacher_id:
+                        parseInt(
+                            document.getElementById(
+                                "teacher_id"
+                            ).value
+                        ),
+
+                    course_name:
+                        document.getElementById(
+                            "course_name"
+                        ).value,
+
+                    credits:
+                        parseInt(
+                            document.getElementById(
+                                "credits"
+                            ).value
+                        )
+
+                };
+
+
+                fetch(
+                    "http://127.0.0.1:5000/courses",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                courseData
+                            )
+
+                    }
+                )
+
+                .then(response =>
+                    response.json()
+                )
+
+                .then(data => {
+
+                    alert(
+                        data.message
+                    );
+
+
+                    document.getElementById(
+                        "courseForm"
+                    ).reset();
+
+
+                    document.getElementById(
+                        "addCourseSection"
+                    ).style.display = "none";
+
+
+                    loadCourses();
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        "Error adding course:",
+                        error
+                    );
+
+                    alert(
+                        "Error adding course."
+                    );
+
+                });
+
+            }
+        );
+
+
+
+        // ==========================================
+        // EDIT COURSE
+        // ==========================================
+
+        function editCourse(course) {
+
+            document.getElementById(
+                "editCourseSection"
+            ).style.display = "block";
+
+
+            document.getElementById(
+                "addCourseSection"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "edit_course_id"
+            ).value =
+                course.course_id;
+
+
+            /*
+             * At the moment the backend GET /courses
+             * returns the department and teacher names.
+             *
+             * Our current sample course uses:
+             * Department ID = 1
+             * Teacher ID = 1
+             */
+
+            document.getElementById(
+                "edit_department_id"
+            ).value = "1";
+
+
+            document.getElementById(
+                "edit_teacher_id"
+            ).value = "1";
+
+
+            document.getElementById(
+                "edit_course_name"
+            ).value =
+                course.course_name;
+
+
+            document.getElementById(
+                "edit_credits"
+            ).value =
+                course.credits;
+
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // UPDATE COURSE
+        // ==========================================
+
+        document.getElementById(
+            "editCourseForm"
+        ).addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const courseId =
+                    document.getElementById(
+                        "edit_course_id"
+                    ).value;
+
+
+                const courseData = {
+
+                    department_id:
+                        parseInt(
+                            document.getElementById(
+                                "edit_department_id"
+                            ).value
+                        ),
+
+                    teacher_id:
+                        parseInt(
+                            document.getElementById(
+                                "edit_teacher_id"
+                            ).value
+                        ),
+
+                    course_name:
+                        document.getElementById(
+                            "edit_course_name"
+                        ).value,
+
+                    credits:
+                        parseInt(
+                            document.getElementById(
+                                "edit_credits"
+                            ).value
+                        )
+
+                };
+
+
+                fetch(
+                    "http://127.0.0.1:5000/courses/" +
+                    courseId,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                courseData
+                            )
+
+                    }
+                )
+
+                .then(response =>
+                    response.json()
+                )
+
+                .then(data => {
+
+                    alert(
+                        data.message
+                    );
+
+
+                    cancelEdit();
+
+                    loadCourses();
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        "Error updating course:",
+                        error
+                    );
+
+                    alert(
+                        "Error updating course."
+                    );
+
+                });
+
+            }
+        );
+
+
+
+        // ==========================================
+        // CANCEL EDIT
+        // ==========================================
+
+        function cancelEdit() {
+
+            document.getElementById(
+                "editCourseSection"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "editCourseForm"
+            ).reset();
+
+        }
+
+
+
+        // ==========================================
+        // DELETE COURSE
+        // ==========================================
+
+        function deleteCourse(courseId) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this course?"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            fetch(
+                "http://127.0.0.1:5000/courses/" +
+                courseId,
+                {
+
+                    method: "DELETE"
+
+                }
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(data => {
+
+                alert(
+                    data.message
+                );
+
+
+                loadCourses();
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error deleting course:",
+                    error
+                );
+
+                alert(
+                    "Error deleting course."
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // LOAD DATA WHEN PAGE OPENS
+        // ==========================================
+
+        loadCourses();
+
+        loadDepartments();
+
+        loadTeachers();
+
+    </script>
+
+</body>
+
+</html>
