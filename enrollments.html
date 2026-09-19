@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduManage - Enrollments</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 240px;
+            background: #1e293b;
+            color: white;
+            padding: 25px 15px;
+            min-height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 13px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #334155;
+            color: white;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+            color: #1e293b;
+        }
+
+        .admin {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* =========================
+           FORM CARD
+        ========================= */
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        td {
+            color: #334155;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            EduManage
+        </div>
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="index.html">
+            👨‍🎓 Students
+        </a>
+
+        <a href="courses.html">
+            📚 Courses
+        </a>
+
+        <a href="enrollments.html" class="active">
+            📝 Enrollments
+        </a>
+
+        <a href="#">
+            📊 Grades
+        </a>
+
+        <a href="#">
+            👥 Users
+        </a>
+
+        <a href="#">
+            ⚙️ Settings
+        </a>
+
+        <a href="#">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <h1>Enrollments</h1>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ADD ENROLLMENT
+        ========================= -->
+
+        <div class="card">
+
+            <h2>Enroll Student</h2>
+
+            <div class="form-grid">
+
+                <!-- STUDENT -->
+
+                <div class="form-group">
+
+                    <label for="student_id">
+                        Student
+                    </label>
+
+                    <select id="student_id" required>
+
+                        <option value="">
+                            Select Student
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- COURSE -->
+
+                <div class="form-group">
+
+                    <label for="course_id">
+                        Course
+                    </label>
+
+                    <select id="course_id" required>
+
+                        <option value="">
+                            Select Course
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label for="enrollment_date">
+                        Enrollment Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="enrollment_date"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="button-container">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="addEnrollment()"
+                >
+                    Enroll Student
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ENROLLMENT LIST
+        ========================= -->
+
+        <div class="card">
+
+            <h2>Current Enrollments</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Enrollment Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="enrollmentTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        const API_URL = "http://127.0.0.1:5000";
+
+
+        // ==========================================
+        // LOAD STUDENTS
+        // ==========================================
+
+        async function loadStudents() {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/students`
+                );
+
+                const students = await response.json();
+
+                const select =
+                    document.getElementById("student_id");
+
+                select.innerHTML =
+                    '<option value="">Select Student</option>';
+
+                students.forEach(student => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = student.student_id;
+
+                    option.textContent =
+                        `${student.first_name} ${student.last_name}`;
+
+                    select.appendChild(option);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading students:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // LOAD COURSES
+        // ==========================================
+
+        async function loadCourses() {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/courses`
+                );
+
+                const courses = await response.json();
+
+                const select =
+                    document.getElementById("course_id");
+
+                select.innerHTML =
+                    '<option value="">Select Course</option>';
+
+                courses.forEach(course => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = course.course_id;
+
+                    option.textContent =
+                        course.course_name;
+
+                    select.appendChild(option);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading courses:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // LOAD ENROLLMENTS
+        // ==========================================
+
+        async function loadEnrollments() {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/enrollments`
+                );
+
+                const enrollments =
+                    await response.json();
+
+                const table =
+                    document.getElementById(
+                        "enrollmentTable"
+                    );
+
+                table.innerHTML = "";
+
+                if (enrollments.length === 0) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td
+                                colspan="4"
+                                class="empty"
+                            >
+                                No enrollments found.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
+                enrollments.forEach(enrollment => {
+
+                    const row =
+                        document.createElement("tr");
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${enrollment.enrollment_id}
+                        </td>
+
+                        <td>
+                            ${enrollment.student_first_name}
+                            ${enrollment.student_last_name}
+                        </td>
+
+                        <td>
+                            ${enrollment.course_name}
+                        </td>
+
+                        <td>
+                            ${enrollment.enrollment_date}
+                        </td>
+
+                    `;
+
+                    table.appendChild(row);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading enrollments:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // ADD ENROLLMENT
+        // ==========================================
+
+        async function addEnrollment() {
+
+            const studentId =
+                document.getElementById(
+                    "student_id"
+                ).value;
+
+            const courseId =
+                document.getElementById(
+                    "course_id"
+                ).value;
+
+            const enrollmentDate =
+                document.getElementById(
+                    "enrollment_date"
+                ).value;
+
+
+            // Check required fields
+
+            if (
+                !studentId ||
+                !courseId ||
+                !enrollmentDate
+            ) {
+
+                alert(
+                    "Please select a student, course and date."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/enrollments`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            student_id:
+                                parseInt(studentId),
+
+                            course_id:
+                                parseInt(courseId),
+
+                            enrollment_date:
+                                enrollmentDate
+
+                        })
+                    }
+                );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    alert(result.message);
+
+                    return;
+                }
+
+
+                alert(result.message);
+
+
+                // Clear form
+
+                document.getElementById(
+                    "student_id"
+                ).value = "";
+
+                document.getElementById(
+                    "course_id"
+                ).value = "";
+
+                document.getElementById(
+                    "enrollment_date"
+                ).value = "";
+
+
+                // Refresh enrollment list
+
+                loadEnrollments();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error adding enrollment:",
+                    error
+                );
+
+                alert(
+                    "Could not connect to the EduManage backend."
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // INITIAL LOAD
+        // ==========================================
+
+        loadStudents();
+
+        loadCourses();
+
+        loadEnrollments();
+
+    </script>
+
+</body>
+
+</html>

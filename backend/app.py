@@ -437,6 +437,117 @@ def delete_course(course_id):
 
 
 # ==================================================
+#                ENROLLMENT MANAGEMENT
+# ==================================================
+
+
+# =========================
+# GET ALL ENROLLMENTS
+# =========================
+
+@app.route("/enrollments", methods=["GET"])
+def get_enrollments():
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            enrollments.enrollment_id,
+            enrollments.student_id,
+            enrollments.course_id,
+            enrollments.enrollment_date,
+
+            students.first_name AS student_first_name,
+            students.last_name AS student_last_name,
+
+            courses.course_name
+
+        FROM enrollments
+
+        JOIN students
+            ON enrollments.student_id = students.student_id
+
+        JOIN courses
+            ON enrollments.course_id = courses.course_id
+
+        ORDER BY enrollments.enrollment_id DESC
+    """)
+
+    enrollments = cursor.fetchall()
+
+    cursor.close()
+
+    return jsonify(enrollments)
+
+
+# =========================
+# ADD A NEW ENROLLMENT
+# =========================
+
+@app.route("/enrollments", methods=["POST"])
+def add_enrollment():
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    data = request.get_json()
+
+    student_id = data["student_id"]
+    course_id = data["course_id"]
+    enrollment_date = data["enrollment_date"]
+
+    cursor = db.cursor()
+
+    # Check if the student is already enrolled
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM enrollments
+        WHERE student_id = %s
+        AND course_id = %s
+    """, (student_id, course_id))
+
+    existing_enrollment = cursor.fetchone()[0]
+
+    if existing_enrollment > 0:
+
+        cursor.close()
+
+        return jsonify({
+            "message": "This student is already enrolled in this course."
+        }), 409
+
+    # Add the enrollment
+    cursor.execute("""
+        INSERT INTO enrollments
+        (
+            student_id,
+            course_id,
+            enrollment_date
+        )
+        VALUES (%s, %s, %s)
+    """, (
+        student_id,
+        course_id,
+        enrollment_date
+    ))
+
+    db.commit()
+
+    cursor.close()
+
+    return jsonify({
+        "message": "Student enrolled successfully!"
+    }), 201
+
+
+# ==================================================
 #                DEPARTMENT MANAGEMENT
 # ==================================================
 
