@@ -615,6 +615,205 @@ def get_teachers():
 
 
 # ==================================================
+#                  GRADE MANAGEMENT
+# ==================================================
+
+
+# =========================
+# GET ALL GRADES
+# =========================
+
+@app.route("/grades", methods=["GET"])
+def get_grades():
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            grades.grade_id,
+            grades.enrollment_id,
+            grades.marks,
+            grades.grade,
+
+            students.student_id,
+            students.first_name AS student_first_name,
+            students.last_name AS student_last_name,
+
+            courses.course_id,
+            courses.course_name
+
+        FROM grades
+
+        JOIN enrollments
+            ON grades.enrollment_id = enrollments.enrollment_id
+
+        JOIN students
+            ON enrollments.student_id = students.student_id
+
+        JOIN courses
+            ON enrollments.course_id = courses.course_id
+
+        ORDER BY grades.grade_id DESC
+    """)
+
+    grades = cursor.fetchall()
+
+    cursor.close()
+
+    return jsonify(grades)
+
+
+# =========================
+# ADD A NEW GRADE
+# =========================
+
+@app.route("/grades", methods=["POST"])
+def add_grade():
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    data = request.get_json()
+
+    enrollment_id = data["enrollment_id"]
+    marks = data["marks"]
+    grade = data["grade"]
+
+    cursor = db.cursor()
+
+    # Check if this enrollment already has a grade
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM grades
+        WHERE enrollment_id = %s
+    """, (enrollment_id,))
+
+    existing_grade = cursor.fetchone()[0]
+
+    if existing_grade > 0:
+
+        cursor.close()
+
+        return jsonify({
+            "message": "This enrollment already has a grade."
+        }), 409
+
+    # Add the grade
+    cursor.execute("""
+        INSERT INTO grades
+        (
+            enrollment_id,
+            marks,
+            grade
+        )
+        VALUES (%s, %s, %s)
+    """, (
+        enrollment_id,
+        marks,
+        grade
+    ))
+
+    db.commit()
+
+    cursor.close()
+
+    return jsonify({
+        "message": "Grade added successfully!"
+    }), 201
+
+
+# =========================
+# UPDATE A GRADE
+# =========================
+
+@app.route("/grades/<int:grade_id>", methods=["PUT"])
+def update_grade(grade_id):
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    data = request.get_json()
+
+    marks = data["marks"]
+    grade = data["grade"]
+
+    cursor = db.cursor()
+
+    cursor.execute("""
+        UPDATE grades
+        SET
+            marks = %s,
+            grade = %s
+        WHERE grade_id = %s
+    """, (
+        marks,
+        grade,
+        grade_id
+    ))
+
+    db.commit()
+
+    if cursor.rowcount == 0:
+
+        cursor.close()
+
+        return jsonify({
+            "message": "Grade not found."
+        }), 404
+
+    cursor.close()
+
+    return jsonify({
+        "message": "Grade updated successfully!"
+    })
+
+
+# =========================
+# DELETE A GRADE
+# =========================
+
+@app.route("/grades/<int:grade_id>", methods=["DELETE"])
+def delete_grade(grade_id):
+
+    global db
+
+    if not db.is_connected():
+        db = get_db_connection()
+
+    cursor = db.cursor()
+
+    cursor.execute("""
+        DELETE FROM grades
+        WHERE grade_id = %s
+    """, (grade_id,))
+
+    db.commit()
+
+    if cursor.rowcount == 0:
+
+        cursor.close()
+
+        return jsonify({
+            "message": "Grade not found."
+        }), 404
+
+    cursor.close()
+
+    return jsonify({
+        "message": "Grade deleted successfully!"
+    })
+
+
+# ==================================================
 #                    RUN SERVER
 # ==================================================
 

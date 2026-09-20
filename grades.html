@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>EduManage - Grades</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+
+        /* ==========================================
+           SIDEBAR
+           ========================================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #1e293b;
+            color: white;
+
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+
+            margin-bottom: 40px;
+
+            text-align: center;
+        }
+
+        .nav-link {
+            display: block;
+
+            padding: 14px 15px;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* ==========================================
+           MAIN CONTENT
+           ========================================== */
+
+        .main {
+            margin-left: 240px;
+
+            padding: 30px;
+        }
+
+
+        /* ==========================================
+           TOP BAR
+           ========================================== */
+
+        .topbar {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+        .admin {
+            background: white;
+
+            padding: 10px 15px;
+
+            border-radius: 6px;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+
+        /* ==========================================
+           PAGE HEADER
+           ========================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            font-size: 24px;
+        }
+
+
+        /* ==========================================
+           FORM SECTION
+           ========================================== */
+
+        .form-section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 8px;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .form-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .grade-form {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .grade-form input,
+        .grade-form select {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+            background: white;
+
+            font-size: 14px;
+        }
+
+        .grade-form button {
+            padding: 11px 18px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+        .save-button {
+            background: #16a34a;
+            color: white;
+        }
+
+        .save-button:hover {
+            background: #15803d;
+        }
+
+        .cancel-button {
+            background: #64748b;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background: #475569;
+        }
+
+
+        /* ==========================================
+           TABLE
+           ========================================== */
+
+        .table-container {
+            background: white;
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+
+            padding: 14px;
+
+            text-align: left;
+
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+
+        /* ==========================================
+           ACTION BUTTONS
+           ========================================== */
+
+        .edit-button {
+
+            background: #f59e0b;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 12px;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+            margin-right: 5px;
+        }
+
+        .edit-button:hover {
+            background: #d97706;
+        }
+
+        .delete-button {
+
+            background: #dc2626;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 12px;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+        }
+
+
+        /* ==========================================
+           MESSAGE
+           ========================================== */
+
+        .message {
+            margin-top: 15px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+
+            .grade-form {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            EduManage
+        </div>
+
+
+        <a href="dashboard.html"
+           class="nav-link">
+
+            🏠 Dashboard
+
+        </a>
+
+
+        <a href="index.html"
+           class="nav-link">
+
+            👨‍🎓 Students
+
+        </a>
+
+
+        <a href="courses.html"
+           class="nav-link">
+
+            📚 Courses
+
+        </a>
+
+
+        <a href="enrollments.html"
+           class="nav-link">
+
+            📝 Enrollments
+
+        </a>
+
+
+        <a href="grades.html"
+           class="nav-link active">
+
+            🎓 Grades
+
+        </a>
+
+
+        <a href="#"
+           class="nav-link">
+
+            👥 Users
+
+        </a>
+
+
+        <a href="#"
+           class="nav-link">
+
+            ⚙️ Settings
+
+        </a>
+
+
+        <a href="#"
+           class="nav-link">
+
+            🚪 Logout
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <div class="main">
+
+
+        <!-- ==========================================
+             TOP BAR
+             ========================================== -->
+
+        <div class="topbar">
+
+            <h1>
+                Grades
+            </h1>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             PAGE HEADER
+             ========================================== -->
+
+        <div class="page-header">
+
+            <h2>
+                Grade Management
+            </h2>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             ADD GRADE FORM
+             ========================================== -->
+
+        <div class="form-section">
+
+            <h3>
+                Add New Grade
+            </h3>
+
+
+            <form
+                class="grade-form"
+                id="gradeForm">
+
+
+                <!-- STUDENT / COURSE -->
+
+                <select
+                    id="enrollment"
+                    required>
+
+                    <option value="">
+                        Select Student / Course
+                    </option>
+
+                </select>
+
+
+                <!-- MARKS -->
+
+                <input
+                    type="number"
+                    id="marks"
+                    placeholder="Marks"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    required>
+
+
+                <!-- GRADE -->
+
+                <select
+                    id="grade"
+                    required>
+
+                    <option value="">
+                        Select Grade
+                    </option>
+
+                    <option value="A">
+                        A
+                    </option>
+
+                    <option value="B">
+                        B
+                    </option>
+
+                    <option value="C">
+                        C
+                    </option>
+
+                    <option value="D">
+                        D
+                    </option>
+
+                    <option value="F">
+                        F
+                    </option>
+
+                </select>
+
+
+                <!-- SAVE -->
+
+                <button
+                    type="submit"
+                    class="save-button">
+
+                    Add Grade
+
+                </button>
+
+
+            </form>
+
+
+            <div
+                id="message"
+                class="message">
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             GRADES TABLE
+             ========================================== -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                            Marks
+                        </th>
+
+                        <th>
+                            Grade
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="gradesTableBody">
+
+                    <!-- Grades will appear here -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script>
+
+
+        // ==========================================
+        // API URL
+        // ==========================================
+
+        const API_URL =
+            "http://127.0.0.1:5000";
+
+
+
+        // ==========================================
+        // LOAD ENROLLMENTS
+        // ==========================================
+
+        function loadEnrollments() {
+
+            fetch(
+                API_URL + "/enrollments"
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(enrollments => {
+
+                const enrollmentSelect =
+                    document.getElementById(
+                        "enrollment"
+                    );
+
+
+                enrollmentSelect.innerHTML = `
+
+                    <option value="">
+                        Select Student / Course
+                    </option>
+
+                `;
+
+
+                enrollments.forEach(
+                    enrollment => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            enrollment.enrollment_id;
+
+
+                        option.textContent =
+                            enrollment.student_first_name
+                            + " "
+                            + enrollment.student_last_name
+                            + " - "
+                            + enrollment.course_name;
+
+
+                        enrollmentSelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading enrollments:",
+                    error
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // LOAD GRADES
+        // ==========================================
+
+        function loadGrades() {
+
+            fetch(
+                API_URL + "/grades"
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(grades => {
+
+                const table =
+                    document.getElementById(
+                        "gradesTableBody"
+                    );
+
+
+                table.innerHTML = "";
+
+
+                grades.forEach(
+                    item => {
+
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
+
+
+                        row.innerHTML = `
+
+                            <td>
+                                ${item.grade_id}
+                            </td>
+
+                            <td>
+                                ${item.student_first_name}
+                                ${item.student_last_name}
+                            </td>
+
+                            <td>
+                                ${item.course_name}
+                            </td>
+
+                            <td>
+                                ${item.marks}
+                            </td>
+
+                            <td>
+                                ${item.grade}
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="edit-button"
+                                    onclick="editGrade(
+                                        ${item.grade_id},
+                                        ${item.marks},
+                                        '${item.grade}'
+                                    )">
+
+                                    Edit
+
+                                </button>
+
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deleteGrade(
+                                        ${item.grade_id}
+                                    )">
+
+                                    Delete
+
+                                </button>
+
+                            </td>
+
+                        `;
+
+
+                        table.appendChild(row);
+
+                    }
+                );
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading grades:",
+                    error
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // ADD GRADE
+        // ==========================================
+
+        document.getElementById(
+            "gradeForm"
+        ).addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const enrollmentId =
+                    document.getElementById(
+                        "enrollment"
+                    ).value;
+
+
+                const marks =
+                    document.getElementById(
+                        "marks"
+                    ).value;
+
+
+                const grade =
+                    document.getElementById(
+                        "grade"
+                    ).value;
+
+
+                const gradeData = {
+
+                    enrollment_id:
+                        parseInt(
+                            enrollmentId
+                        ),
+
+                    marks:
+                        parseFloat(
+                            marks
+                        ),
+
+                    grade:
+                        grade
+
+                };
+
+
+                fetch(
+                    API_URL + "/grades",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                gradeData
+                            )
+
+                    }
+                )
+
+                .then(response =>
+                    response.json()
+                )
+
+                .then(data => {
+
+                    alert(
+                        data.message
+                    );
+
+
+                    if (
+                        data.message ===
+                        "Grade added successfully!"
+                    ) {
+
+                        document
+                            .getElementById(
+                                "gradeForm"
+                            )
+                            .reset();
+
+
+                        loadGrades();
+
+                        loadEnrollments();
+
+                    }
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        "Error adding grade:",
+                        error
+                    );
+
+                    alert(
+                        "Error adding grade."
+                    );
+
+                });
+
+            }
+        );
+
+
+
+        // ==========================================
+        // EDIT GRADE
+        // ==========================================
+
+        function editGrade(
+            gradeId,
+            currentMarks,
+            currentGrade
+        ) {
+
+            const newMarks =
+                prompt(
+                    "Enter new marks:",
+                    currentMarks
+                );
+
+
+            if (newMarks === null) {
+
+                return;
+
+            }
+
+
+            const newGrade =
+                prompt(
+                    "Enter new grade (A, B, C, D or F):",
+                    currentGrade
+                );
+
+
+            if (newGrade === null) {
+
+                return;
+
+            }
+
+
+            const gradeData = {
+
+                marks:
+                    parseFloat(
+                        newMarks
+                    ),
+
+                grade:
+                    newGrade.toUpperCase()
+
+            };
+
+
+            fetch(
+                API_URL + "/grades/" + gradeId,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            gradeData
+                        )
+
+                }
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(data => {
+
+                alert(
+                    data.message
+                );
+
+
+                loadGrades();
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error updating grade:",
+                    error
+                );
+
+                alert(
+                    "Error updating grade."
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // DELETE GRADE
+        // ==========================================
+
+        function deleteGrade(
+            gradeId
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this grade?"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            fetch(
+                API_URL + "/grades/" + gradeId,
+                {
+
+                    method: "DELETE"
+
+                }
+            )
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(data => {
+
+                alert(
+                    data.message
+                );
+
+
+                loadGrades();
+
+                loadEnrollments();
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error deleting grade:",
+                    error
+                );
+
+                alert(
+                    "Error deleting grade."
+                );
+
+            });
+
+        }
+
+
+
+        // ==========================================
+        // LOAD DATA WHEN PAGE OPENS
+        // ==========================================
+
+        loadEnrollments();
+
+        loadGrades();
+
+    </script>
+
+</body>
+
+</html>
